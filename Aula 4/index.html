@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<!--Henrique François dos Santos-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="Imagens/favicon.ico" type="image/x-icon">
+    <style>
+        body{
+            background-color: rgb(190, 190, 190);
+        }
+
+        header{
+            height: 100px;
+            text-align: center;
+        }
+
+        #codeSpace{
+            padding-left: 20px;
+            padding-top: 20px;
+            margin: auto;
+            width: 750px;
+            height: 250px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 5px gray;
+            background-color: rgb(31, 30, 30);
+        }
+
+        code{
+            font-size: 15px;
+            display: inline-flex;
+            position: relative;
+            color: white;
+        }
+
+        a{
+            color: blue;
+        }
+
+        #main{
+            margin: auto;
+            width: 600px;
+            height: 500px;
+            margin-top: 100px;
+        }
+
+        #texto{
+            font-size: 20px;
+            text-align: justify;
+        }
+
+    </style>
+
+    <header>
+        <h1>Palavras em binário</h1>
+    </header>
+</head>
+<body>
+    <div id="codeSpace">
+        <pre><code>var codigo = prompt('Insira o código binário: ');
+var palavra = ''
+var letra = []
+var x = 0
+for(var y = 0; y <= codigo.length; y++){
+    x++
+    letra.push(codigo[y]);
+    if(x == 5){
+        palavra += (`${binario(`${letra[0]}${letra[1]}${letra[2]}${letra[3]}${letra[4]}`)}`)
+        letra = []
+        x = 0
+    }</code></pre>
+    </div>
+
+    <div id="main">
+        <p id="texto">O código começa pedindo para você digitar uma sequência de números binários. Depois, ele lê essa sequência um número de cada vez, juntando esses números de cinco em cinco. Cada grupo de cinco números é separado e enviado para uma função (chamada binario) que transforma esses cinco números binários em uma letra do alfabeto ou outro caractere. Depois que essa letra é obtida, o código vai juntando ela com as outras letras formadas para criar uma palavra inteira. Então, no final, o que o programa faz é pegar o código binário que você deu, dividir em grupos menores de cinco números, converter cada grupo em uma letra e formar uma palavra que você pode ler normalmente. É como decodificar uma mensagem em código binário para algo que a gente entende melhor, uma palavra escrita.</p>
+    </div>
+</body>
+</html>
