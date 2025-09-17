@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chav Ia</title>
+    <style>
+        header{
+            width: 100%;
+            height: 120px;
+            display: flex;
+            padding: 0 20px;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            background-color: transparent;
+        }
+
+        #entrar{
+            font-size: 35px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            position: absolute;
+            right: 5%;
+            top: 30px;
+            width: 150px;
+            height: 35px;
+            background-color: white;
+            border-radius: 20px;
+            display: flex;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body{
+            background-color: rgb(41, 41, 41);
+        }
+
+        #logocabecalho{
+            height: 100px;
+            width: auto;
+        }
+
+        h1{
+            font-size: 35px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            position: absolute;
+            left: 50%;
+            margin: 0;
+        }
+
+        #campopesquisa{
+            width: 800px;
+            height: 90px;
+            border-radius: 70px;
+            background-color: transparent;
+            display: flex;
+            margin: 30px auto 0 auto;
+            padding-left: 20px;
+            align-items: flex-start;
+            box-sizing: border-box;
+        }
+
+        #input1{
+            flex-grow: 1;
+            width: 100%;
+            height: 70px;
+            border: none;
+            background-color: transparent;
+            font-size: 20px;
+            outline: none;
+            padding: 10px;
+            white-space: normal;
+            word-wrap: break-word;
+            resize: vertical;
+            overflow-y: auto;
+            border-radius: 50px 0 0 50px;
+            color: white;
+        }
+
+        #submitButton{
+            margin-right: 15px;
+            margin-top: 45px;
+            border-radius: 50px;
+            width: 90px;
+            height: 40px;
+            font-size: 15px;
+            border: none;
+            background-color: rgb(99, 99, 99);
+            color: rgb(255, 255, 255);
+        }
+
+        #submitButton:hover{
+            background-color: rgb(71, 71, 71);
+        }
+
+        footer{
+            position: fixed;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            border-radius: 70px;
+            width: 800px; 
+            height: 90px;
+            background-color: rgb(75, 74, 74);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            padding-bottom: 30px;
+        }
+
+        #resposta{
+            background-color: transparent;
+            width: 700px;
+            height: auto;
+            padding: 20px 20px 20px 20px;
+            border-radius: 7px;
+            margin: auto;
+            margin-top: 0%;
+            color: white;
+            margin-bottom: 150px;
+            text-align: justify;
+        }
+
+        input::placeholder{
+            color: white;
+        }
+
+        #img1{
+            width: 660px;
+            height: auto;
+        }
+
+        h3{
+            font-size: 30px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        p{
+            font-size: 20px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+        }
+
+        #chatgpt{
+            font-size: 20px;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5500/Aula%207/ChatGPT%20Pobre/index.html"><img src="../ChatGPT Pobre/imagens/chaves.png" alt="" id="logocabecalho"></a>
+        <a href="">
+            <div id="entrar">
+                <p id="chatgpt">Chat GPT</p>
+            </div>
+        </a>
+    </header>
+
+    <div id="resposta"></div>
+
+    <footer>
+        <form id="formulario">
+            <div id="campopesquisa">
+                <label for="input1"></label>
+                <input type="text" id="input1" required placeholder="Digite aqui">
+                <button id="submitButton" type="button" onclick="pesquisar()">&#8593;</button>
+                <button id="submitButton" type="button" onclick="limpar()">limpar</button>
+            </div>
+        </form>
+    </footer>
+
+    <script>
+        const input = document.getElementById('input1');
+        const botao = document.getElementById('submitButton');
+        const resposta = document.getElementById('resposta');
+
+        var computacaoLista = [
+            'computação em nuvem', 'computação', 'computacao', 'computacaoemnuvem', 
+            'co', 'com', 'comp', 'compu', 'comput', 'computa', 'computac', 'computaca', 
+            'computaça', 'computaçã', 'computacã', 'computacaoem nuvem', 'c', 
+            'computacaomnuvem', 'computacaoem-nuvem', 'computacao_nuvem', 'computacaoem_nuvem', 
+            'computacao-nuvem', 'computação-nuvem', 'computacao_nuvem',
+            'computacaomenuvem', 'computaca-nuvem', 'computacaoem-nuvem', 'computacaom-nuvem', 
+            'computacaoem_kuvem', 'computacaoenuvem', 'computcaonuvem', 'computacaoenuvem',
+            'computacaoem_nveum', 'computaonuvem', 'compu_nuvem', 'computacionuvem'
+        ];
+
+        var infraestruturaLista = [
+            "infraestrutura de ti", "infraestrutura", "infrestrutura", "infra", "infr", 
+            "infraes", "infraest", "infraestr", "infraestru", "infraestrut", "infraestrutu", 
+            "infraestrutur", "infraestruturade", "infraestrutura de", "infraestrutura d", 
+            "infraestrutura de t", "infraestruturadeti", "infraestruturadeti", 
+            "infra-estrutura", "infraestrutura-ti", "infraestruturat", "infraestruturati", 
+            "infraestruturat", "infraestruturadi", "infraestruturati", "infrastrutura", 
+            "infraestruturanuvem", "infraestruturadeti", "infra-ti", "infraestrutura-ti",
+            "infraestruct", "infraestrutuura", "infratrutura", "infra-estrurura", "infratorura",
+            "infraestutura", "infraestrutrat", "infrestura", "infstruturar", "infraestruturti",
+            "infrastrutura", "infraestruturanuvemm"
+        ];
+
+        var saasLista = [
+            "saas", "s", "sa", "saa", "s-aas", "s-a-a-s", "saas-modelo", "modelo-saas", 
+            "modelosaas", "saasmodelo", "saas-aplicativo", "saasaplicativo", "saas-serviço",
+            "sazz", "saass", "saaz", "ssaas", "saaas", "ssass", "saas-servisso", "saas-modello", 
+            "saascloude", "soas", "sasa", "saasmodel", "saas-meio", "saas-servicos", 
+            "saasbr", "saus", "sas"
+        ];
+
+        var paasLista = [
+            "paas", "p", "pa", "paa", "paas", "p-a-a-s", "platform-as-service", "plataforma-paas", 
+            "paas-plataforma", "plataformaas", "paas-cloud", "paas-cloudservice", "plataforma-cloud", 
+            "paascloud", "paascloudservice", "plataforma-cloud", "paass", "paass", "paaas", "paaa", 
+            "p-ass", "platformsaas", "plaas", "plataformaas", "paass", "plataformaaas", "platfomass",
+            "plataformpaas", "plaatformaas", "plataformpaas"
+        ];
+
+        var iaasLista = [
+            "iaas", "i", "ia", "iaa", "iaas", "infrastructure-as-service", "infra-iaas", 
+            "iaas-modelo", "iaas-service", "modelo-iaas", "iaas-service", "iaascloud", "iaas-cloud", 
+            "iaass", "iaaass", "iaass-cc", "iass", "iaasservico", "iiass", "iassservice", "iaas-nuvem", 
+            "iaascloud", "iaasclod", "iaascloudservice", "iaasclodservice", "iaasscloud"
+        ];
+
+        var virtualizacaoLista = [
+            "virtualização", "virtualizacao", "v", "vi", "vir", "virt", "virtu", "virtua", "virtual", 
+            "virtuali", "virtualiz", "virtualiza", "virtualizaç", "virtualizac", "virtualizaçao", 
+            "virtualizacao", "virtualizacaoem", "virtualizacaonuvem", "virtualizacaoem-nuvem", 
+            "virtualizacao-nuvem", "virtualizacaoinfra", "infra-virtualizacao", "virtualizacaonuvemcloud",
+            "virtulizacao", "virutalizacao", "virtualizacaoaa", "virtuazacao", "virtualzacao", "virtuazacao", 
+            "virtalizaçao", "virtuaizaçao", "virtuallizacao", "virtulizaçao", "virtuallizacaonuvem",
+            "vritualizacao", "virtuaalizacao", "vritualzacao", "virtulazacao", "virtuulizacao", "virtializacao"
+        ];
+
+        var chaves = [
+            "chaves", "chavo"
+        ];
+
+        var bixo = [
+            "marcos", "joao", "jao", "jão", "joão", "marcs", "preto", "marcos eduardo", "marcos e", "marcos e.", "sarah", "sarinha"
+        ]
+
+        var polato = [
+            "marco", "polato", "marco polato"
+        ]
+
+        var humano = [
+            "henrique", "matheus p", "matheus p.", "matheus padilha"
+        ]
+
+        var gustavo = [
+            "gustavo", "gustavinho", "gostoso", "giga chad"
+        ]
+
+        function limpar(){
+            resposta.innerHTML = '';
+        }
+
+        function pesquisar(){
+            const conteudo = input.value.toLowerCase().trim();
+            
+            input.value = '';
+
+            if(computacaoLista.includes(conteudo)){
+                resposta.innerHTML += `
+                    <h3>Computação em Nuvem</h3>
+                    <p>A computação em nuvem é basicamente a utilização de recursos de TI, como servidores e armazenamento, pela internet. Em vez de manter tudo fisicamente, posso acessar essas ferramentas de qualquer lugar. A "nuvem" oferece flexibilidade e escalabilidade, permitindo que eu aumente ou diminua os recursos conforme necessário, sem precisar comprar equipamentos novos. Com ela posso acessar dados e aplicativos de qualquer dispositivo com internet.</p>
+                    <img src="../ChatGPT Pobre/imagens/nuvem1.jpeg" alt="" id="img1">
+                `;
+            }else if(infraestruturaLista.includes(conteudo)){
+                resposta.innerHTML += `
+                    <h3>Infraestrutura de TI</h3>
+                    <p>É o conjunto de recursos de TI necessários para que uma empresa funcione de forma eficiente. Como servidores, redes, sistemas de armazenamento e todo o hardware e software que permitem o processamento e a troca de informações. A infraestrutura de TI pode ser tanto física, com equipamentos de servidores e cabos, quanto virtual, com a computação em nuvem. Uma boa infraestrutura é importante para garantir a segurança dos dados e a agilidade no acesso ao sistema.</p>
+                    <img src="../ChatGPT Pobre/imagens/infraestrutura.webp" alt="" id="img1">
+                `;
+            }else if(saasLista.includes(conteudo)){
+                resposta.innerHTML += `
+                    <h3>SaaS</h3>
+                    <p>É um modelo de distribuição de software em que o programa é hospedado na nuvem e acessado pela internet, sem necessidade de instalação local. Ao invés de comprar e instalar o software, o usuário paga uma assinatura para usar a aplicação via navegador, como o Google Docs ou o Office 365. Tudo fica gerenciado na nuvem.</p>
+                    <img src="../ChatGPT Pobre/imagens/saas.jpg" alt="" id="img1">
+                `;
+            }else if(paasLista.includes(conteudo)){
+                resposta.innerHTML += `
+                    <h3>PaaS</h3>
+                    <p>É um modelo de computação em nuvem que oferece uma plataforma completa para o desenvolvimento, execução e gerenciamento de aplicativos. Ele fornece ferramentas e serviços como bancos de dados, servidores e ambientes de desenvolvimento, permitindo que os desenvolvedores se concentrem apenas no código e na criação das aplicações, sem se preocupar com a infraestrutura subjacente. Como exemplo de PaaS temos o Microsoft Azure.</p>
+                    <img src="../ChatGPT Pobre/imagens/paas.png" alt="" id="img1">
+                `;
+            }else if(iaasLista.includes(conteudo)){
+                resposta.innerHTML += `
+                    <h3>IaaS</h3>
+                    <p>É um modelo de computação em nuvem que oferece recursos de infraestrutura, como servidores, armazenamento e redes, de forma escalável. Em vez de precisar investir em equipamentos físicos, as empresas alugam esses recursos de provedores de nuvem. O IaaS permite que as empresas gerenciem suas próprias aplicações e sistemas operacionais, mas sem se preocupar com a manutenção do hardware.</p>
+                    <img src="../ChatGPT Pobre/imagens/iaas.png" alt="" id="img1">
+                `;
+            }else if(virtualizacaoLista.includes(conteudo)){
+                resposta.innerHTML += `
+                    <h3>Virtualização</h3>
+                    <p>A virtualização é uma tecnologia que permite criar versões "virtuais" de recursos físicos, como servidores, sistemas operacionais ou redes, dentro de um único hardware físico. Isso é feito através de um software chamado hipervisor, que divide o hardware em várias máquinas virtuais independentes, permitindo que elas funcionem como se fossem sistemas separados. Por exemplo, em vez de ter vários servidores físicos, uma empresa pode usar um único servidor físico para rodar várias máquinas virtuais.</p>
+                    <img src="../ChatGPT Pobre/imagens/virtu.jpg" alt="" id="img1">
+                `;
+            }else if(chaves.includes(conteudo)){
+                resposta.innerHTML += '<h3>Chavinho</h3><p>Chaves: o menino que conquistou o mundo com simplicidade e humor<br><br>    Chaves é um dos personagens mais icônicos da televisão latino-americana e mundial. Criado e interpretado por Roberto Gómez Bolaños, um talentoso escritor, ator, diretor e comediante mexicano, Chaves (originalmente chamado El Chavo del Ocho) surgiu na televisão em 1971 e rapidamente conquistou o coração de milhões de telespectadores.<br>    O personagem é um menino órfão que vive dentro de um barril, em uma vila modesta cercado por vizinhos igualmente caricatos, como Seu Madruga, Dona Florinda, Quico, Chiquinha, Professor Girafales e muitos outros. Apesar de sua vida simples e cheia de dificuldades, Chaves encantava a todos com sua inocência, bondade e humor genuíno. Suas frases marcantes como "Foi sem querer querendo!" ou "Ninguém tem paciência comigo..." se tornaram parte do imaginário popular.<br>    Mais do que apenas um personagem cômico, Chaves representava a criança comum, cheia de sonhos, medos e esperanças. Ele ensinou valores como a amizade, a honestidade, a empatia e a importância de rir mesmo nas dificuldades. A série abordava temas sérios de forma leve e acessível, como a pobreza, o abandono e os conflitos familiares — sempre com muito respeito e sensibilidade.<br>    O sucesso de Chaves foi tão grande que o programa foi exibido em dezenas de países e traduzido para diversos idiomas. No Brasil, por exemplo, a série se tornou um fenômeno cultural, sendo exibida por décadas no SBT, marcando gerações inteiras.<br>    Roberto Gómez Bolaños, conhecido carinhosamente como Chespirito, deixou um legado que vai muito além da comédia. Ele provou que é possível fazer humor inteligente, sem apelar para a violência ou ofensas. Com personagens simples e roteiros criativos, ele tocou o coração de milhões de pessoas, ensinando que a verdadeira riqueza está nos sentimentos e na pureza da alma.<br>    Em resumo, Chaves foi mais que um personagem de TV: ele foi um símbolo de humanidade, de afeto e de esperança. Seu impacto no mundo é imensurável, e sua memória continua viva em cada risada, em cada episódio reprisado, e em cada adulto que, mesmo depois de crescer, ainda se emociona ao ouvir a musiquinha de abertura.</p> <img src="../ChatGPT Pobre/imagens/chavin.jpg" alt="" id="img1">';
+            }else if(bixo.includes(conteudo)){
+                resposta.innerHTML += '<p>Isso, pra quem tem cérebro, não é nem considerado gente. Não vamos comentar mais.'
+            }else if(polato.includes(conteudo)){
+                resposta.innerHTML += '<h3>O Polato é a maior escória da humanidade</h3><p>O cara ganha tudo, é um parasita, esquisito que repele o órgão reprodutor feminino. Isso ali é pior que bicho. E...<br> A CARNE SÓ CAI NO PRATO DE VEGANO</p>'
+            }else if(humano.includes(conteudo)){
+                resposta.innerHTML += '<h3>Um dos únicos seres humanos decentes no curso</h3><p>Esse é um dos únicos seres humanos decentes no curso. Esta é uma especie rara por aqui, e servirá como um EasterEgg, pois é dificil encontrar... Boa sorte!</p>'
+            }else if(gustavo.includes(conteudo)){
+                resposta.innerHTML += '<h3>GIGA CHAD</h3><p>O ser humano mais GIGA CHAD, o que poderia ser o protagonista do curso, o SIGMA, o Sr. Músculos, ele mesmo, GUSTAVO &#128576;</p><img src="../ChatGPT Pobre/imagens/gustavo.jpg" alt="" id="img1">'
+            }
+        }
+
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); 
+                botao.click(); 
+            }
+        });
+    </script>
+</body>
+</html>

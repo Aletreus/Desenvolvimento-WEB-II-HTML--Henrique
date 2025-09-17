@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Previsão do Tempo</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      transition: background 2s ease;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      color: #fff;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 50px 40px;
+      border-radius: 25px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(18px);
+      width: 420px;
+      max-width: 90%;
+      animation: fadeIn 1.2s ease;
+      transition: all 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(255,255,255,0.7);
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-size: 1.1rem;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      text-align: center;
+      transition: 0.3s;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    input:focus {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px #00e6ff;
+    }
+
+    button {
+      padding: 14px 28px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 180, 255, 0.6);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      transform: scale(1.08);
+      box-shadow: 0 0 25px rgba(0, 200, 255, 0.8);
+    }
+
+    #clima-imagem {
+      margin-top: 30px;
+      width: 220px;
+      transition: 0.8s ease;
+      filter: drop-shadow(0 0 15px rgba(255,255,255,0.5));
+    }
+
+    #clima-imagem:hover {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    /* Animação trovão */
+    .trovao {
+      animation: flash 0.8s infinite alternate;
+    }
+    @keyframes flash {
+      0% { filter: drop-shadow(0 0 8px yellow) brightness(1); }
+      100% { filter: drop-shadow(0 0 40px yellow) brightness(1.7); }
+    }
+
+    /* CANVAS para clima */
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="efeitos"></canvas>
+
+  <div class="container">
+    <h1>🌤️ Previsão do Tempo</h1>
+
+    <label for="temperatura">Temperatura (°C):</label>
+    <input type="number" id="temperatura" placeholder="Digite a temperatura">
+
+    <label for="probabilidade-chuva">Probabilidade de Chuva (%):</label>
+    <input type="number" id="probabilidade-chuva" placeholder="Digite a probabilidade de chuva">
+
+    <button onclick="mostrarClima()">Ver Clima</button>
+
+    <div>
+      <img id="clima-imagem" src="imagens/seminfo.png" alt="Imagem do clima">
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("efeitos");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particulas = [];
+    let tipoClima = "";
+
+    function gerarParticulas(tipo) {
+      particulas = [];
+      tipoClima = tipo;
+
+      for (let i = 0; i < 200; i++) {
+        particulas.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          velocidade: Math.random() * 3 + 2,
+          tamanho: Math.random() * 4 + 2
+        });
+      }
+    }
+
+    function desenhar() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = tipoClima === "neve" ? "white" : "rgba(173,216,230,0.7)";
+
+      particulas.forEach(p => {
+        if (tipoClima === "chuva") {
+          ctx.fillRect(p.x, p.y, 2, 10);
+        } else if (tipoClima === "neve") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.tamanho, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        p.y += p.velocidade;
+        if (p.y > canvas.height) p.y = -10;
+      });
+
+      requestAnimationFrame(desenhar);
+    }
+
+    desenhar();
+
+    function limparEfeitos() {
+      particulas = [];
+      tipoClima = "";
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function mostrarClima() {
+      const temperatura = document.getElementById('temperatura').value;
+      const probabilidadeChuva = document.getElementById('probabilidade-chuva').value;
+      const climaImagem = document.getElementById('clima-imagem');
+      const body = document.body;
+
+      if (temperatura === '' || probabilidadeChuva === '') {
+        alert('Por favor, preencha todos os campos!');
+        return;
+      }
+
+      climaImagem.classList.remove("trovao");
+      limparEfeitos();
+
+      if (probabilidadeChuva > 80 && temperatura >= 20) {
+        climaImagem.src = 'imagens/temporal.png';
+        climaImagem.classList.add("trovao");
+        gerarParticulas("chuva");
+        body.style.background = "linear-gradient(-45deg, #232526, #414345, #000000, #434343)";
+        body.style.backgroundSize = "400% 400%";
+
+      } else if (temperatura < 0) {
+        climaImagem.src = 'imagens/neve.png';
+        gerarParticulas("neve");
+        body.style.background = "linear-gradient(-45deg, #e0eafc, #cfdef3, #8e9eab, #eef2f3)";
+        body.style.backgroundSize = "400% 400%";
+
+      } else if (probabilidadeChuva > 60) {
+        climaImagem.src = 'imagens/chuva.png';
+        gerarParticulas("chuva");
+        body.style.background = "linear-gradient(-45deg, #373B44, #4286f4, #2c5364, #203a43)";
+        body.style.backgroundSize = "400% 400%";
+
+      } else if (temperatura > 30 && probabilidadeChuva < 50) {
+        climaImagem.src = 'imagens/ensolarado.png';
+        body.style.background = "linear-gradient(-45deg, #f6d365, #fda085, #fbc531, #e67e22)";
+        body.style.backgroundSize = "400% 400%";
+
+      } else {
+        climaImagem.src = 'imagens/nublado.png';
+        body.style.background = "linear-gradient(-45deg, #2c3e50, #4b79a1, #283e51, #485563)";
+        body.style.backgroundSize = "400% 400%";
+      }
+
+      resetCampos();
+    }
+
+    function resetCampos() {
+      document.getElementById('temperatura').value = '';
+      document.getElementById('probabilidade-chuva').value = '';
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>

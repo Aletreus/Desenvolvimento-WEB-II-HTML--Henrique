@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        header{
+            top: 0;
+            left: 0;
+            padding: 0 20px;
+            box-sizing: border-box;
+            background-color: gray;
+            border-bottom: 3px solid rgb(167, 167, 167);
+            height: 50px;
+            justify-content: center;
+            display: flex;
+            box-shadow: 5px 5px 5px black;
+            width: 100%;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        body{
+            background-color: aliceblue;
+        }
+
+        #espacos{
+            width: 100%;
+            height: 500px;
+            display: flex;
+            background-color: red;
+        }
+
+        input{
+            width: 100px;
+            height: 30px;
+            background-color: aqua;
+        }
+        
+        button{
+            height: 40px;
+            width: 200px;
+            background-color: aquamarine;
+        }
+
+        label{
+            font-size: 30px;
+        }
+    </style>
+    <header>
+        <h1>Voto</h1>
+    </header>
+</head>
+<body>
+    <div id="espacos">
+        <form id="formulario">
+            <label for="input1">Insira sua idade</label>
+            <input type="number" id="input1" required>
+            <button type="submit">Verificar voto</button>
+        </form>
+    </div>
+    <div>
+        <h1>resultado</h1>
+        <p id="resultado"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('formulario');
+
+        form.addEventListener('submit', function(event){
+            event.preventDefault();
+            const resultado = document.getElementById('resultado');
+
+            let numero1 = document.getElementById('input1').value;
+            
+            if(numero1 >= 18 && numero1 < 60){
+                resultado.innerText = "Seu voto é obrigatorio"
+            }else if(numero1 >= 16){
+                resultado.innerText = "Seu voto é facultativo"
+            }else{
+                resultado.innerText = "Seu voto é dispensado"
+            }
+        });
+    </script>
+</body>
+</html>
